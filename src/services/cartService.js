@@ -13,7 +13,7 @@ async function getCart(userId) {
     include: {
       items: {
         include: {
-          variant: { include: { product: { select: { name: true, slug: true, images: true } } } },
+          variant: { include: { product: { select: { name: true, slug: true, images: true, basePrice: true } } } },
         },
       },
     },
