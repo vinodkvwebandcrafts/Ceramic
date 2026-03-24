@@ -12,7 +12,16 @@
       "Bash(xargs cat:*)",
       "Bash(npm list:*)",
       "Bash(grep -n \"require.*app\\\\|require.*swagger\" D:/Github/Ceramic/tests/integration/*.test.js)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Read(//c/Users/wac/Desktop/**)",
+      "Bash(npx create-next-app@latest ceramic-frontend --js --app --tailwind --eslint --no-src-dir --import-alias \"@/*\" --yes)",
+      "Bash(npx shadcn@latest init --defaults)",
+      "Bash(npx shadcn@latest add button card input label badge separator select skeleton sheet --yes)",
+      "Bash(npx next:*)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "neon"
+  ]
 }
