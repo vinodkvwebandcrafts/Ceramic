@@ -80,37 +80,39 @@ ceramic-frontend/
 
 ## Visual Design
 
-### Color Palette (Bold/Modern Dark Theme)
+### Color Palette (Minimal / Clean — Earthy Tones)
 
 | Role | Color | Hex |
 |---|---|---|
-| Background | Dark charcoal | `#0a0a0a` |
-| Surface | Elevated cards | `#171717` |
-| Primary accent | Warm amber/gold | `#d4a574` |
-| Text primary | Off-white | `#fafafa` |
-| Text secondary | Muted gray | `#a1a1aa` |
-| Borders | Subtle | `#262626` |
-| Success | Green | standard |
-| Error | Red | standard |
+| Background | Warm white | `#faf8f5` |
+| Surface | Soft cream | `#f3efe8` |
+| Primary accent | Warm terracotta | `#c4775a` |
+| Secondary accent | Muted sage | `#8a9a7b` |
+| Text primary | Deep charcoal | `#2c2c2c` |
+| Text secondary | Warm gray | `#7a7268` |
+| Borders | Light sand | `#e5ddd3` |
+| Success | Sage green | `#6b8f5e` |
+| Error | Soft red | `#c45c4d` |
 
 ### Typography
 
-- Font family: `Inter` or `Geist` — clean, geometric, modern
-- Large product names, generous spacing throughout
+- Font family: `DM Sans` or `Lora` — warm, elegant serif/sans-serif pairing (headings in serif, body in sans)
+- Generous whitespace, understated sizing, letting the products speak
+- Lightweight font weights (300-400) for body, medium (500) for headings
 
 ### Component Patterns
 
-- **ProductCard:** Dark card, large image with hover-zoom, name + price below, subtle border glow on hover
-- **Header:** Sticky, dark, logo left, nav center, cart icon (badge count) + auth right
-- **Buttons:** Primary = amber fill + dark text, Secondary = outlined, ghost for nav
-- **VariantSelector:** Pill-style toggles for size/color
-- **Forms:** Dark inputs, subtle borders, amber focus ring
+- **ProductCard:** White card, soft shadow, large image with subtle scale on hover, name + price below in muted tones
+- **Header:** Clean white, logo left, minimal nav center, cart icon + auth right, thin bottom border
+- **Buttons:** Primary = terracotta fill + white text, Secondary = outlined in charcoal, ghost for nav
+- **VariantSelector:** Soft rounded toggles with sand border, terracotta fill when active
+- **Forms:** White inputs, sand borders, terracotta focus ring, rounded corners
 
 ### Layout
 
-- Max-width container (~1280px), centered
-- Product grid: 1 col mobile, 2 col tablet, 3-4 col desktop
-- Generous padding and spacing
+- Max-width container (~1200px), centered
+- Product grid: 1 col mobile, 2 col tablet, 3 col desktop
+- Abundant whitespace and padding — airy, gallery-like feel
 
 ---
 
