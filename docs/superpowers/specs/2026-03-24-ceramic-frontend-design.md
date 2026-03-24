@@ -46,13 +46,19 @@ ceramic-frontend/
 │   ├── checkout/
 │   │   └── page.js            # Checkout — address + Stripe (Client Component)
 │   ├── orders/
-│   │   └── page.js            # Order history (Client Component, auth required)
+│   │   ├── page.js            # Order history (Client Component, auth required)
+│   │   └── [id]/
+│   │       └── page.js        # Order detail / confirmation (Client Component)
 │   ├── login/
 │   │   └── page.js            # Login form (Client Component)
 │   ├── register/
 │   │   └── page.js            # Register form (Client Component)
+│   ├── not-found.js           # Custom 404 page
+│   ├── error.js               # Global error boundary (Client Component)
+│   ├── loading.js             # Global loading skeleton
 │   └── globals.css
 ├── components/
+│   ├── Providers.js           # "use client" wrapper for AuthContext + CartContext
 │   ├── ui/                    # shadcn/ui components
 │   ├── layout/                # Header, Footer, Navbar
 │   ├── products/              # ProductCard, ProductGrid, VariantSelector
@@ -112,7 +118,11 @@ ceramic-frontend/
 
 ### Server Components (Public Pages)
 
-Product listing, product detail, category pages, and home page fetch directly from the backend (`http://localhost:4000/api/...`) at request time. No auth needed. No client-side caching — fresh data on every load.
+Product listing, product detail, category pages, and home page fetch directly from the backend at request time. No auth needed. No client-side caching — fresh data on every load.
+
+**Backend URL configuration:** Server Components use a server-only env var `API_URL` (e.g., `http://localhost:4000`). Client Components use `NEXT_PUBLIC_API_URL`. Both default to `http://localhost:4000` in development. In production, `API_URL` can point to an internal network address while `NEXT_PUBLIC_API_URL` points to the public backend URL.
+
+**CORS:** The backend already has `cors()` enabled. In development, add a `rewrites()` entry in `next.config.js` to proxy `/api` requests to the backend, avoiding CORS issues during local development.
 
 ### Auth Context
 
@@ -120,13 +130,14 @@ Product listing, product detail, category pages, and home page fetch directly fr
 - Persists tokens to `localStorage` on login/register
 - Hydrates from `localStorage` on mount
 - Exposes: `login()`, `register()`, `logout()`, `isAuthenticated`
-- Wraps entire app via root layout providers
+- Wraps entire app via `Providers.js` — a `"use client"` component imported by root layout
+- Initial render shows unauthenticated state until client hydrates from localStorage (brief flash handled by suppressing auth-dependent UI until `isHydrated` flag is true)
 
 ### Cart Context
 
 - **Authenticated users:** Syncs with backend (`GET/POST/PUT/DELETE /api/cart`)
 - **Unauthenticated users:** localStorage-only cart
-- On login: merges local cart into backend cart
+- On login: merges local cart into backend cart by calling `POST /api/cart/items` for each local item (backend increments quantity if variant already exists), then clears localStorage cart
 - Optimistic updates: mutate state first, fire API, rollback on failure
 - Exposes: `cart`, `addItem()`, `updateItem()`, `removeItem()`, `itemCount`, `total`
 
@@ -162,6 +173,7 @@ Product listing, product detail, category pages, and home page fetch directly fr
 - Stock indicator: "In stock" / "Out of stock" per variant `stockQty`
 - Add to cart button: disabled when out of stock
 - Category breadcrumb at top
+- **Note:** VariantSelector and AddToCartButton are Client Component islands embedded inside this Server Component page
 
 ### Cart (`/cart`)
 
@@ -173,11 +185,11 @@ Product listing, product detail, category pages, and home page fetch directly fr
 ### Checkout (`/checkout`)
 
 - Protected route — redirect to `/login` if not authenticated
-- Shipping address form: name, street, city, state, zip, country
+- Shipping address form: `line1`, `line2` (optional), `city`, `state`, `zip`, `country` (matches backend `checkoutSchema`)
 - Stripe Elements card input
 - Order summary sidebar: items + total
 - "Pay now" button with loading state
-- Success: redirect to `/orders` with success toast
+- Success: redirect to `/orders/[id]?success=true` — shows order confirmation with success toast
 
 ### Order History (`/orders`)
 
@@ -199,7 +211,7 @@ Product listing, product detail, category pages, and home page fetch directly fr
 1. User fills shipping address form
 2. Frontend calls `POST /api/orders/checkout` with shipping address → receives `clientSecret` + `orderId`
 3. Stripe Elements collects card details using `clientSecret`
-4. On Stripe payment success → redirect to order confirmation page
+4. On Stripe payment success → redirect to `/orders/[orderId]?success=true` (order confirmation page)
 5. Stripe webhook updates order status to PAID on the backend (async)
 
 ---
@@ -241,13 +253,13 @@ Product listing, product detail, category pages, and home page fetch directly fr
   "next": "^15",
   "react": "^19",
   "react-dom": "^19",
-  "@stripe/stripe-js": "latest",
-  "@stripe/react-stripe-js": "latest",
+  "@stripe/stripe-js": "^5",
+  "@stripe/react-stripe-js": "^3",
   "tailwindcss": "^4",
-  "class-variance-authority": "latest",
-  "clsx": "latest",
-  "tailwind-merge": "latest",
-  "lucide-react": "latest"
+  "class-variance-authority": "^0.7",
+  "clsx": "^2",
+  "tailwind-merge": "^3",
+  "lucide-react": "^0.475"
 }
 ```
 
